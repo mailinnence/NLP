@@ -1,0 +1,156 @@
+1.추진배경
+Part.유사도 분석 프로그램
+
+https://www.ajunews.com/view/20190603160132641
+
+AI 응급의료시스템이  
+1) 환자 이송시간을 최대한 줄여 치료 골든타임을 확보 
+2) 환자상태‧질환‧중증도에 따른 맞춤형 치료 제공 등에 있다.
+
+목표로 
+심혈관질환, 뇌혈관질환, 중증외상, 심정지 등 4대 응급 서비스를 중점으로
+신고접수, 응급처치, 이송, 응급실 등 모든 응급 단계에 맞춰 
+다양한 연구가 진행 중이다.
+
+
+
+
+
+2.구현하고자 하는 기능
+응급환자가 119에 전화하여 자신의 증상을 말하면 그 증상
+음성으로 받아서 텍스트로 전환 후 
+DB 안에 각 질환마다 해당하는 환자와 의사와의 대화 데이터와
+유사도 분석을 하여 질환을 예측한다.
+
+
+
+
+
+
+
+
+3.프로세스
+3-1.유사도 분석 모델 학습
+자연어 처리 중 Sentence Transformers 중 sentence-klue-roberta-base 모델을 활용할 것 이다.
+
+먼저 아나콘다 가상환경으로 python 3.8 버전으로
+cuda 버전 11.3 , cudnn 8.1 버전
+pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1
+버전으로 환경을 가주었다.
+
+
+주피터 노트북 기준으로 설치해야 하는 라이브러리는 이렇다.
+
+!pip install sentence-transformers datasets
+!pip install scikit-learn
+!pip install --upgrade pip
+!pip install SpeechRecognition
+!pip install pyautogui
+!pip install clipboard
+!pip install keyboard
+!pip install pyaudio
+
+
+
+
+라이브러리들을 모두 임포트
+import math
+import logging
+from datetime import datetime
+
+import torch
+from torch.utils.data import DataLoader
+from datasets import load_dataset
+from sentence_transformers import SentenceTransformer,  LoggingHandler, losses, models, util
+from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
+from sentence_transformers.readers import InputExample
+
+
+
+학습 경과를 지켜보는데 사용될 logger 를 초기화합니다.
+logging.basicConfig(
+    format="%(asctime)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO,
+    handlers=[LoggingHandler()],
+)
+
+
+
+사용할 모델과 학습 정보를 정한다. 
+필자 경우 1 , 100 , 200 , 300 번 학습한 모델을 만들고 가장 높은 정확도를 가진 모델을 사용할 것 이다
+model_name = "klue/roberta-base"
+train_batch_size = 32
+num_epochs = 100
+model_save_path = "output/training_klue_sts_" + model_name.replace("/", "-") + "-" + datetime.n
+
+
+
+언어 모델을 로드
+embedding_model = models.Transformer(model_name)
+
+문장 임베딩에서는 모든 토큰 임베딩을 더해준 후, 
+더해진 토큰 개수만큼 나누어 문장을 대표하는 임베딩으로 사용하는 기법인 Mean Pooling을 사용할 예정
+pooler = models.Pooling(
+    embedding_model.get_word_embedding_dimension(),
+    pooling_mode_mean_tokens=True,
+    pooling_mode_cls_token=False,
+    pooling_mode_max_tokens=False,
+)
+
+
+
+
+
+
+
+3-2.모델 학습
+
+
+
+3-3.데이터 분류 및 정제
+3-4.GUI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

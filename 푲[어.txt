@@ -1,0 +1,65 @@
+1.특수문자 제거
+2.맞춤법 교정
+3,표제어 추출
+4.조사 및 감탄사등 분석에 불필요한 불용어 제거
+
+
+list1 = []
+
+from konlpy.tag import Okt
+
+voc = '심근경색 전조증상이 의심됩니다 주위에서 골든타임 특히 조심해야 한다고 중간중간 체크하라고 하네요 특히 가슴 통증하고 만성피로가 느껴진다고 했었거든요'
+okt_pos = Okt().pos(voc, norm=True, stem=True)
+print(okt_pos)
+
+or "Verb" or "Adjective"
+
+list1 = []
+for i in range(len(okt_pos)):
+    if okt_pos[i][1] == "Noun":
+        list1.append(okt_pos[i][0])
+    elif okt_pos[i][1] == "Verb":
+        list1.append(okt_pos[i][0])
+    elif okt_pos[i][1] == "Adjective":
+        list1.append(okt_pos[i][0])
+
+str =" ".join(list1)
+print(str)
+
+
+C:\Users\maili\OneDrive\바탕 화면\nlp\data\내과\심근경색
+./data/내과/심근경색/심근경색.txt
+
+
+list1 = []
+def Web_Attack():
+    file= open('./data/내과/심근경색/심근경색.txt', 'r',encoding='utf-8')
+    passwords = file.readlines()
+    for password in passwords:
+        voc = password 
+        okt_pos = Okt().pos(voc, norm=True, stem=True)
+        for i in range(len(okt_pos)):
+            if okt_pos[i][1] == "Noun":
+                list1.append(okt_pos[i][0])
+            elif okt_pos[i][1] == "Verb":
+                list1.append(okt_pos[i][0])
+            elif okt_pos[i][1] == "Adjective":
+                list1.append(okt_pos[i][0])
+        
+Web_Attack()
+list1
+
+
+str =" ".join(list1)
+
+
+
+
+TF-IDF 벡터화
+
+
+
+
+
+
+
